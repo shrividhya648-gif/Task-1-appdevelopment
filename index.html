@@ -1,0 +1,1654 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4169e1">
+<title>BloomCards — Study & Grow</title>
+
+<style>
+:root {
+  --blue: #4169e1;
+  --blue-dark: #2448ad;
+  --bg: #edf3ff;
+  --green: #b9f3ce;
+  --green-dark: #176b46;
+  --ink: #202c45;
+  --muted: #77839a;
+  --white: #fff;
+  --border: #e3e9f5;
+  --shadow: 0 16px 45px rgba(37, 66, 139, .11);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 8% 10%, #dce8ff 0, transparent 34%),
+    radial-gradient(ellipse at 94% 90%, #d9f7e6 0, transparent 30%),
+    var(--bg);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+               BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 3px solid #91b5ff;
+  outline-offset: 3px;
+}
+
+.app {
+  max-width: 1160px;
+  margin: auto;
+  padding: 25px 24px 45px;
+}
+
+/* Header */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  color: white;
+  font-size: 26px;
+  background: linear-gradient(145deg, #6489ff, #3456ca);
+  box-shadow: 0 8px 18px #4169e13b;
+}
+
+.brand h1 {
+  font-size: 22px;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.brand p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.header-actions { display: flex; gap: 9px; }
+
+.btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 16px;
+  font-weight: 700;
+  transition: transform .18s, background .18s, box-shadow .18s;
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: scale(.98); }
+
+.btn-primary {
+  color: white;
+  background: var(--blue);
+  box-shadow: 0 5px 12px #4169e126;
+}
+.btn-primary:hover { background: var(--blue-dark); }
+
+.btn-light {
+  background: white;
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+
+.btn-danger {
+  color: #c13e52;
+  background: #fff0f1;
+  border: 1px solid #ffd9df;
+}
+
+.btn-green {
+  background: var(--green-dark);
+  color: white;
+}
+
+.btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Welcome area */
+
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: linear-gradient(115deg, #4169e1, #6686ef);
+  border-radius: 25px;
+  padding: 28px 32px;
+  color: white;
+  box-shadow: 0 14px 35px #4169e129;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 23px;
+}
+
+.welcome::after {
+  content: "✦";
+  position: absolute;
+  font-size: 155px;
+  right: 27%;
+  top: -54px;
+  color: #ffffff12;
+  pointer-events: none;
+}
+
+.welcome h2 {
+  margin: 0 0 8px;
+  font-size: clamp(23px, 4vw, 32px);
+  letter-spacing: -1px;
+}
+
+.welcome p {
+  margin: 0;
+  color: #e1e9ff;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.welcome-emoji { font-size: 55px; z-index: 1; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.stat {
+  background: #ffffffd9;
+  border: 1px solid #ffffff;
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 5px 18px #2448ad08;
+}
+
+.stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.stat-icon { font-size: 21px; }
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 9px;
+  letter-spacing: -1px;
+}
+
+/* Main workspace */
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 305px;
+  gap: 23px;
+  align-items: start;
+}
+
+.panel {
+  background: #ffffffed;
+  border: 1px solid #ffffff;
+  border-radius: 22px;
+  padding: 23px;
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.section-heading h3 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -.5px;
+}
+
+.pill {
+  background: #edf2ff;
+  color: #4665bc;
+  font-size: 11px;
+  font-weight: 750;
+  border-radius: 30px;
+  padding: 7px 11px;
+  white-space: nowrap;
+}
+
+/* Flashcard */
+
+.progress-track {
+  height: 6px;
+  background: #e9eef9;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #4169e1, #7b9cff);
+  border-radius: inherit;
+  transition: width .3s;
+}
+
+.flashcard {
+  min-height: 275px;
+  perspective: 1000px;
+  cursor: pointer;
+  margin-bottom: 17px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  min-height: 275px;
+  transform-style: preserve-3d;
+  transition: transform .55s cubic-bezier(.2,.7,.2,1);
+}
+
+.flashcard.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  min-height: 275px;
+  padding: 25px;
+  border-radius: 21px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow-wrap: anywhere;
+}
+
+.card-front {
+  background: linear-gradient(145deg, #c8f6d8, #a7eec1);
+  border: 1px solid #9ce2b6;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(145deg, #d7f4ff, #c6e5ff);
+  border: 1px solid #b4dcf7;
+}
+
+.card-label {
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #26734d;
+  margin-bottom: 22px;
+}
+
+.card-back .card-label { color: #3269a0; }
+
+.card-text {
+  font-size: clamp(20px, 3vw, 27px);
+  line-height: 1.45;
+  font-weight: 750;
+  max-width: 480px;
+  white-space: pre-wrap;
+}
+
+.card-hint {
+  font-size: 12px;
+  color: #507760;
+  margin-top: 24px;
+}
+
+.card-back .card-hint { color: #527a9c; }
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.card-actions .btn { flex: 1; }
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 5px;
+}
+
+.nav-btn {
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 12px;
+  padding: 11px 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.nav-btn:hover:not(:disabled) { background: #f1f5ff; }
+
+.card-count {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Quiz */
+
+.quiz-box {
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 21px;
+}
+
+.quiz-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.quiz-description {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0 0 13px;
+}
+
+.quiz-form {
+  display: flex;
+  gap: 8px;
+}
+
+.text-field {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid #dce4f3;
+  border-radius: 12px;
+  background: #fbfcff;
+  color: var(--ink);
+}
+
+.text-field:focus { border-color: #7c9cff; }
+
+.feedback {
+  min-height: 24px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.feedback.good { color: #198352; }
+.feedback.bad { color: #c13e52; }
+
+.answer-reveal {
+  margin-top: 8px;
+  padding: 12px;
+  background: #eef9f2;
+  border: 1px solid #d0eedb;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Right sidebar */
+
+.side-panel { display: grid; gap: 18px; }
+
+.search-box { margin-bottom: 14px; }
+
+.deck-list {
+  display: grid;
+  gap: 9px;
+  max-height: 330px;
+  overflow-y: auto;
+  padding-right: 3px;
+}
+
+.deck-item {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid #e8edf6;
+  background: white;
+  border-radius: 14px;
+  padding: 12px;
+  color: var(--ink);
+  transition: background .2s, border-color .2s;
+}
+
+.deck-item:hover { background: #f6f8ff; }
+
+.deck-item.active {
+  background: #edf2ff;
+  border-color: #b9caff;
+}
+
+.deck-number {
+  flex-shrink: 0;
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #d9f6e4;
+  color: #176b46;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.deck-item.active .deck-number {
+  background: #4169e1;
+  color: white;
+}
+
+.deck-info { flex: 1; min-width: 0; }
+
+.deck-info strong {
+  display: block;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deck-info small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.mini-icon {
+  border: 0;
+  background: transparent;
+  color: #8a96ad;
+  font-size: 17px;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.mini-icon:hover {
+  background: #ffe8ec;
+  color: #c13e52;
+}
+
+.empty-list {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 25px 8px;
+}
+
+.tip-box {
+  background: #fff5dc;
+  border: 1px solid #f8e9bb;
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.tip-box h4 { margin: 0 0 8px; font-size: 14px; }
+
+.tip-box p {
+  margin: 0;
+  font-size: 12px;
+  color: #7d6b43;
+  line-height: 1.7;
+}
+
+.tip-box .tip-emoji { font-size: 23px; margin-bottom: 8px; }
+
+.side-progress {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 17px;
+  border-radius: 18px;
+}
+
+.side-progress h4 { margin: 0 0 12px; font-size: 14px; }
+
+.progress-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  margin: 10px 0;
+}
+
+.progress-line span:last-child {
+  font-weight: 800;
+}
+
+.side-progress .progress-track { margin: 0; }
+
+/* Modal */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: #15234280;
+  backdrop-filter: blur(5px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.modal-backdrop.open { display: flex; }
+
+.modal {
+  width: min(100%, 475px);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 23px;
+  padding: 25px;
+  box-shadow: 0 25px 80px #10204a30;
+  animation: popIn .25s ease;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(10px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.modal-head h2 { margin: 0; font-size: 21px; }
+
+.close-btn {
+  border: 0;
+  background: #f0f3fa;
+  border-radius: 10px;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  color: var(--ink);
+}
+
+.field-group { margin-bottom: 17px; }
+
+.field-group label {
+  display: block;
+  font-weight: 750;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.field-group textarea {
+  min-height: 105px;
+  resize: vertical;
+}
+
+.field-help {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 7px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 23px;
+}
+
+.toast {
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  bottom: 25px;
+  transform: translate(-50%, 20px);
+  opacity: 0;
+  pointer-events: none;
+  background: #202c45;
+  color: white;
+  padding: 13px 20px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 10px 35px #15234235;
+  transition: .25s;
+  max-width: calc(100% - 30px);
+  text-align: center;
+}
+
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Confetti */
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 30;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -15px;
+  width: 9px;
+  height: 13px;
+  border-radius: 3px;
+  animation: fall var(--duration) ease-in forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translate(var(--drift), 110vh) rotate(850deg);
+    opacity: .15;
+  }
+}
+
+footer {
+  text-align: center;
+  padding: 28px 0 0;
+  font-size: 12px;
+  color: #8490a6;
+}
+
+/* Mobile */
+
+@media (max-width: 790px) {
+  .workspace { grid-template-columns: 1fr; }
+  .side-panel { grid-template-columns: 1fr 1fr; }
+  .deck-panel { grid-column: 1 / -1; }
+}
+
+@media (max-width: 520px) {
+  .app { padding: 17px 13px 30px; }
+  header { align-items: flex-start; margin-bottom: 22px; }
+  .brand h1 { font-size: 19px; }
+  .brand p { font-size: 11px; }
+  .logo { width: 42px; height: 42px; }
+  .header-actions { flex-direction: column; }
+  .header-actions .btn { padding: 9px 11px; font-size: 12px; }
+  .welcome { padding: 23px 20px; border-radius: 20px; }
+  .welcome-emoji { font-size: 38px; }
+  .stats { gap: 8px; }
+  .stat { padding: 13px 11px; border-radius: 14px; }
+  .stat-number { font-size: 24px; }
+  .stat-top { font-size: 10px; }
+  .panel { padding: 16px; }
+  .flashcard, .card-inner, .card-face { min-height: 255px; }
+  .card-face { padding: 18px; }
+  .card-actions { gap: 7px; }
+  .card-actions .btn { padding: 10px 8px; font-size: 12px; }
+  .side-panel { grid-template-columns: 1fr; }
+  .deck-panel { grid-column: auto; }
+  .quiz-form { flex-wrap: wrap; }
+  .quiz-form .btn { width: 100%; }
+}
+.feature-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.progress-section {
+  margin: 16px 0;
+  color: white;
+  font-weight: bold;
+}
+
+.progress-track {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #a8f0d1;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+#streakText {
+  color: white;
+  text-align: center;
+  margin: 12px 0;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <header>
+    <div class="brand">
+      <div class="logo">✿</div>
+      <div>
+        <h1>BloomCards</h1>
+        <p>A little progress, every day 🌱</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-light" id="soundToggle" type="button">
+        🔊 Sound on
+      </button>
+      <button class="btn btn-primary" id="addBtn" type="button">
+        + New card
+      </button>
+    </div>
+  </header>
+
+  <section class="welcome">
+    <div>
+      <h2>Ready to bloom? 🌷</h2>
+      <p>Small steps today, big knowledge tomorrow.<br>
+         Let's make learning feel a little more lovely.</p>
+    </div>
+    <div class="welcome-emoji" aria-hidden="true">📚✨</div>
+  </section>
+
+  <section class="stats" aria-label="Study statistics">
+    <div class="stat">
+      <div class="stat-top"><span>Total cards</span><span class="stat-icon">📖</span></div>
+      <div class="stat-number" id="totalStat">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-top"><span>Correct answers</span><span class="stat-icon">🌟</span></div>
+      <div class="stat-number" id="correctStat">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-top"><span>Accuracy</span><span class="stat-icon">🎯</span></div>
+      <div class="stat-number" id="accuracyStat">0%</div>
+    </div>
+  </section>
+
+  <main class="workspace">
+    <section class="panel">
+      <div class="section-heading">
+        <h3>Study time ✨</h3>
+        <span class="pill" id="modePill">QUESTION</span>
+      </div>
+
+      <div class="progress-track" aria-label="Deck progress">
+        <div class="progress-fill" id="cardProgress"></div>
+      </div>
+
+      <div class="flashcard" id="flashcard"
+           role="button" tabindex="0"
+           aria-label="Flashcard. Activate to reveal the answer.">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="card-label">✦ YOUR QUESTION ✦</div>
+            <div class="card-text" id="questionText">Loading your cards...</div>
+            <div class="card-hint">Think about it, you've got this! 💭</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="card-label">✦ THE ANSWER ✦</div>
+            <div class="card-text" id="answerText"></div>
+            <div class="card-hint">Every answer helps you grow 🌱</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-primary" id="showAnswerBtn" type="button">
+          💡 Show answer
+        </button>
+        <button class="btn btn-light" id="editBtn" type="button">
+          ✏️ Edit
+        </button>
+        <button class="btn btn-danger" id="deleteCurrentBtn" type="button"
+                title="Delete this card">
+          🗑
+        </button>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" id="prevBtn" type="button">← Previous</button>
+        <span class="card-count" id="cardCount">0 / 0</span>
+        <button class="nav-btn" id="nextBtn" type="button">Next →</button>
+      </div>
+      <div class="feature-buttons">
+  <button class="btn btn-light" id="shuffleBtn" type="button">
+    🔀 Shuffle
+  </button>
+
+  <button class="btn btn-light" id="hardModeBtn" type="button">
+    🧠 Hard Cards: Off
+  </button>
+</div>
+
+<div class="progress-section">
+  <p id="progressText">🌱 Progress: 0%</p>
+  <div class="progress-track">
+    <div id="progressFill" class="progress-fill"></div>
+  </div>
+</div>
+
+<div id="streakText">🔥 Study streak: 0 days</div>
+      <div class="quiz-box">
+        <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+  <button class="btn btn-light" id="restartBtn" type="button">
+    🔄 Restart Quiz
+  </button>
+</div>
+        <div class="quiz-title">🎮 Quick answer challenge</div>
+        <p class="quiz-description">
+          Type your answer from memory. Get it right to earn a little celebration!
+        </p>
+        <form class="quiz-form" id="quizForm">
+          <input class="text-field" id="quizInput" type="text"
+                 placeholder="I think the answer is..." autocomplete="off"
+                 aria-label="Your answer">
+          <button class="btn btn-green" id="checkBtn" type="submit">
+            Check answer ✨
+          </button>
+        </form>
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+        <div id="revealedAnswer"></div>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="panel deck-panel">
+        <div class="section-heading">
+          <h3>Your deck</h3>
+          <span class="pill" id="deckCount">0 CARDS</span>
+        </div>
+        <input class="text-field search-box" id="searchInput"
+               type="search" placeholder="🔎 Find a question..."
+               aria-label="Search flashcards">
+        <div class="deck-list" id="deckList"></div>
+      </section>
+
+      <section class="side-progress">
+        <h4>🌼 Your progress</h4>
+        <div class="progress-line">
+          <span>Questions tried</span>
+          <span id="triedStat">0</span>
+        </div>
+        <div class="progress-line">
+          <span>Cards mastered</span>
+          <span id="masteredStat">0</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="masteryProgress"></div>
+        </div>
+        <p style="font-size:11px;color:#77839a;line-height:1.6;margin:12px 0 0">
+          Answer correctly to mark a card as mastered. Keep growing! 🌿
+        </p>
+      </section>
+
+      <section class="tip-box">
+        <div class="tip-emoji">🍯</div>
+        <h4>A tiny study tip</h4>
+        <p>Try answering before revealing the back. Remembering information yourself is a great way to strengthen learning!</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer>Made with 💚 for curious minds · BloomCards</footer>
+</div>
+
+<!-- Add/edit card dialog -->
+<div class="modal-backdrop" id="modalBackdrop"
+     role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">Create a flashcard 🌱</h2>
+      <button class="close-btn" id="closeModalBtn" type="button"
+              aria-label="Close dialog">×</button>
+    </div>
+
+    <form id="cardForm">
+      <div class="field-group">
+        <label for="questionInput">Your question</label>
+        <textarea class="text-field" id="questionInput" required
+                  maxlength="500"
+                  placeholder="e.g. What is photosynthesis?"></textarea>
+        <div class="field-help">Write a question that helps you learn.</div>
+      </div>
+
+      <div class="field-group">
+        <label for="answerInput">The answer</label>
+        <textarea class="text-field" id="answerInput" required
+                  maxlength="1000"
+                  placeholder="e.g. The process plants use to turn light into energy."></textarea>
+        <div class="field-help">Keep it clear and easy to remember.</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-light" id="cancelBtn" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="saveBtn">Save card 🌿</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "bloomcards_v1";
+
+  const starterCards = [
+    {
+      id: "starter-1",
+      question: "What is the powerhouse of the cell?",
+      answer: "The mitochondrion produces most of the cell's usable energy.",
+      mastered: false
+    },
+    {
+      id: "starter-2",
+      question: "What is the capital of Japan?",
+      answer: "Tokyo.",
+      mastered: false
+    },
+    {
+      id: "starter-3",
+      question: "What is photosynthesis?",
+      answer: "The process plants use to convert light energy into chemical energy.",
+      mastered: false
+    },
+    {
+      id: "starter-4",
+      question: "What is 12 × 8?",
+      answer: "96.",
+      mastered: false
+    },
+    {
+      id: "starter-5",
+      question: "Which planet is known as the Red Planet?",
+      answer: "Mars, because iron-rich dust gives its surface a reddish appearance.",
+      mastered: false
+    }
+  ];
+
+  const $ = id => document.getElementById(id);
+
+  let cards = [];
+  let currentIndex = 0;
+  let isFlipped = false;
+  let editingId = null;
+  let soundOn = true;
+  let correctAnswers = 0;
+  let attemptedAnswers = 0;
+  let toastTimer;
+  let audioContext = null;
+  let previousFocus = null;
+  let hardMode = false;
+
+let studyStreak = Number(
+  localStorage.getItem("bloomStudyStreak") || 0
+);
+
+let lastStudyDate =
+  localStorage.getItem("bloomLastStudyDate") || "";
+
+  // Load saved data safely. New visitors get example cards.
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+
+    if (
+      saved &&
+      Array.isArray(saved.cards) &&
+      saved.cards.every(c =>
+        c &&
+        typeof c.id === "string" &&
+        typeof c.question === "string" &&
+        typeof c.answer === "string"
+      )
+    ) {
+      cards = saved.cards.map(c => ({
+        id: c.id,
+        question: c.question,
+        answer: c.answer,
+        mastered: Boolean(c.mastered)
+      }));
+
+      correctAnswers = Math.max(0, Number(saved.correctAnswers) || 0);
+      attemptedAnswers = Math.max(0, Number(saved.attemptedAnswers) || 0);
+    } else {
+      cards = starterCards.map(c => ({ ...c }));
+    }
+  } catch (error) {
+    cards = starterCards.map(c => ({ ...c }));
+  }
+
+  function saveData() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        cards,
+        correctAnswers,
+        attemptedAnswers
+      }));
+    } catch (error) {
+      showToast("Couldn't save locally. Check your browser storage.");
+    }
+  }
+
+  function currentCard() {
+    return cards[currentIndex] || null;
+  }
+
+  function makeId() {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID();
+    }
+    return "card-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+  }
+
+  function normalize(text) {
+    return text
+      .toLocaleLowerCase()
+      .normalize("NFKC")
+      .replace(/[^\p{L}\p{N}]+/gu, " ")
+      .trim()
+      .replace(/\s+/g, " ");
+  }
+
+  // Accept minor punctuation/capitalization differences.
+  // Also allow a complete short answer to be found within a longer answer.
+  function isCorrect(userAnswer, expectedAnswer) {
+    const user = normalize(userAnswer);
+    const expected = normalize(expectedAnswer);
+
+    if (!user || !expected) return false;
+    if (user === expected) return true;
+
+    if (user.length >= 3 && expected.length >= 3) {
+      if (expected.length <= 100 && expected.includes(user)) return true;
+      if (user.length >= 5 && user.includes(expected)) return true;
+    }
+
+    return false;
+  }
+
+  function render() {
+    const card = currentCard();
+    const hasCards = Boolean(card);
+
+    $("totalStat").textContent = cards.length;
+    $("correctStat").textContent = correctAnswers;
+    $("accuracyStat").textContent = attemptedAnswers
+      ? Math.round(correctAnswers / attemptedAnswers * 100) + "%"
+      : "0%";
+
+    $("triedStat").textContent = attemptedAnswers;
+    $("masteredStat").textContent = cards.filter(c => c.mastered).length;
+    $("deckCount").textContent = cards.length + (cards.length === 1 ? " CARD" : " CARDS");
+
+    const mastered = cards.filter(c => c.mastered).length;
+    $("masteryProgress").style.width =
+      cards.length ? (mastered / cards.length * 100) + "%" : "0%";
+
+    $("cardCount").textContent = hasCards
+      ? `${currentIndex + 1} / ${cards.length}`
+      : "0 / 0";
+
+    $("cardProgress").style.width = hasCards
+      ? ((currentIndex + 1) / cards.length * 100) + "%"
+      : "0%";
+
+    $("prevBtn").disabled = !hasCards || currentIndex === 0;
+    $("nextBtn").disabled = !hasCards || currentIndex === cards.length - 1;
+    $("showAnswerBtn").disabled = !hasCards;
+    $("editBtn").disabled = !hasCards;
+    $("deleteCurrentBtn").disabled = !hasCards;
+    $("quizInput").disabled = !hasCards;
+    $("checkBtn").disabled = !hasCards;
+
+    $("flashcard").style.cursor = hasCards ? "pointer" : "default";
+    $("flashcard").setAttribute("aria-disabled", String(!hasCards));
+
+    if (card) {
+      $("questionText").textContent = card.question;
+      $("answerText").textContent = card.answer;
+      $("showAnswerBtn").textContent = isFlipped
+        ? "↩ Show question"
+        : "💡 Show answer";
+      $("modePill").textContent = isFlipped ? "ANSWER" : "QUESTION";
+    } else {
+      $("questionText").textContent = "Your next big idea starts here! 🌱";
+      $("answerText").textContent = "Add a card to begin your study session.";
+      $("showAnswerBtn").textContent = "💡 Show answer";
+      $("modePill").textContent = "EMPTY DECK";
+    }
+
+    $("flashcard").classList.toggle("flipped", isFlipped);
+    renderDeckList();
+
+updateProgress();
+}
+  
+  function shuffleCards() {
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+
+  currentIndex = 0;
+  isFlipped = false;
+  render();
+
+  showToast("Cards shuffled! 🔀");
+}
+
+function toggleHardMode() {
+  hardMode = !hardMode;
+
+  $("hardModeBtn").textContent =
+    hardMode ? "🧠 Hard Cards: On" : "🧠 Hard Cards: Off";
+
+  currentIndex = 0;
+  isFlipped = false;
+  render();
+}
+
+function updateProgress() {
+  const total = cards.length;
+
+  const mastered = cards.filter(
+    card => card.mastered
+  ).length;
+
+  const percent = total
+    ? Math.round((mastered / total) * 100)
+    : 0;
+
+  $("progressText").textContent =
+    `🌱 Progress: ${percent}% (${mastered}/${total})`;
+
+  $("progressFill").style.width = `${percent}%`;
+
+  $("streakText").textContent =
+    `🔥 Study streak: ${studyStreak} day${studyStreak === 1 ? "" : "s"}`;
+}
+
+function recordStudyDay() {
+  const today = new Date().toLocaleDateString("en-CA");
+
+  if (lastStudyDate === today) return;
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const yesterdayString =
+    yesterday.toLocaleDateString("en-CA");
+
+  studyStreak =
+    lastStudyDate === yesterdayString
+      ? studyStreak + 1
+      : 1;
+
+  lastStudyDate = today;
+
+  localStorage.setItem("bloomStudyStreak", studyStreak);
+  localStorage.setItem("bloomLastStudyDate", lastStudyDate);
+
+  updateProgress();
+}
+
+  function renderDeckList() {
+    const list = $("deckList");
+    const query = normalize($("searchInput").value);
+    const filtered = cards
+      .map((card, index) => ({ card, index }))
+      .filter(({ card }) =>
+        normalize(card.question + " " + card.answer).includes(query)
+      );
+
+    list.replaceChildren();
+
+    if (!filtered.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty-list";
+      empty.textContent = cards.length
+        ? "No cards match your search. 🔎"
+        : "Your deck is waiting to bloom! Add your first card above. 🌷";
+      list.appendChild(empty);
+      return;
+    }
+
+    filtered.forEach(({ card, index }) => {
+      const item = document.createElement("div");
+      item.className = "deck-item" + (index === currentIndex ? " active" : "");
+
+      const selectButton = document.createElement("button");
+      selectButton.type = "button";
+      selectButton.className = "deck-item";
+      selectButton.style.flex = "1";
+      selectButton.style.minWidth = "0";
+      selectButton.setAttribute("aria-label", "Study: " + card.question);
+      selectButton.setAttribute("aria-current",
+        index === currentIndex ? "true" : "false");
+
+      const number = document.createElement("span");
+      number.className = "deck-number";
+      number.textContent = card.mastered ? "✓" : String(index + 1);
+
+      const info = document.createElement("span");
+      info.className = "deck-info";
+
+      const question = document.createElement("strong");
+      question.textContent = card.question;
+
+      const status = document.createElement("small");
+      status.textContent = card.mastered ? "🌟 Mastered" : "Ready to learn";
+
+      info.append(question, status);
+      selectButton.append(number, info);
+      selectButton.addEventListener("click", () => {
+        currentIndex = index;
+        resetCardState();
+        render();
+      });
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "mini-icon";
+      deleteButton.textContent = "×";
+      deleteButton.title = "Delete this flashcard";
+      deleteButton.setAttribute("aria-label", "Delete " + card.question);
+      deleteButton.addEventListener("click", () => deleteCard(card.id));
+
+      item.append(selectButton, deleteButton);
+      list.appendChild(item);
+    });
+  }
+function restartQuiz() {
+  // Start again from the first flashcard
+  currentIndex = 0;
+
+  // Show the question side of the card
+  isFlipped = false;
+
+  // Clear the previous answer and feedback
+  $("quizInput").value = "";
+  $("feedback").textContent = "";
+  $("feedback").className = "feedback";
+  $("revealedAnswer").replaceChildren();
+
+  // Reset quiz statistics
+  correctAnswers = 0;
+  attemptedAnswers = 0;
+
+  // Reset mastered status for every card
+  cards.forEach(card => {
+    card.mastered = false;
+  });
+
+  // Save and refresh the app
+  saveData();
+  render();
+
+  showToast("Fresh start! Let's bloom again 🌱");
+}
+  function resetCardState() {
+    isFlipped = false;
+    $("quizInput").value = "";
+    $("feedback").textContent = "";
+    $("feedback").className = "feedback";
+    $("revealedAnswer").replaceChildren();
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= cards.length) return;
+    currentIndex = index;
+    resetCardState();
+    render();
+  }
+
+  function toggleAnswer() {
+    if (!currentCard()) return;
+    isFlipped = !isFlipped;
+    render();
+  }
+
+  // Cute success sound created with Web Audio: no audio file required.
+  function playSuccessSound() {
+    if (!soundOn) return;
+
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+
+      audioContext = audioContext || new AudioCtx();
+
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+
+      const now = audioContext.currentTime;
+      const notes = [
+        { frequency: 659.25, start: 0, duration: 0.14 },
+        { frequency: 783.99, start: 0.12, duration: 0.14 },
+        { frequency: 987.77, start: 0.24, duration: 0.24 }
+      ];
+
+      notes.forEach(note => {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(
+          note.frequency, now + note.start
+        );
+
+        gain.gain.setValueAtTime(0.0001, now + note.start);
+        gain.gain.exponentialRampToValueAtTime(
+          0.12, now + note.start + 0.025
+        );
+        gain.gain.exponentialRampToValueAtTime(
+          0.0001, now + note.start + note.duration
+        );
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start(now + note.start);
+        oscillator.stop(now + note.start + note.duration + 0.02);
+      });
+    } catch (error) {
+      // The app still works if sound is unavailable.
+    }
+  }
+
+  function celebrate() {
+    const layer = $("confettiLayer");
+    const colors = [
+      "#4169e1", "#8fe5ae", "#ffcb69",
+      "#ff8fab", "#bca7ff", "#75d9e8"
+    ];
+
+    for (let i = 0; i < 65; i++) {
+      const piece = document.createElement("span");
+      piece.className = "confetti-piece";
+      piece.style.left = Math.random() * 100 + "%";
+      piece.style.backgroundColor =
+        colors[Math.floor(Math.random() * colors.length)];
+      piece.style.setProperty("--drift", (Math.random() * 220 - 110) + "px");
+      piece.style.setProperty("--duration", (1.4 + Math.random() * 1.6) + "s");
+      piece.style.animationDelay = Math.random() * 0.35 + "s";
+
+      if (Math.random() > 0.5) {
+        piece.style.borderRadius = "50%";
+      }
+
+      layer.appendChild(piece);
+      piece.addEventListener("animationend", () => piece.remove());
+    }
+
+    playSuccessSound();
+  }
+
+  function checkAnswer(event) {
+    event.preventDefault();
+    const card = currentCard();
+    if (!card) return;
+
+    const guess = $("quizInput").value.trim();
+    const feedback = $("feedback");
+    const revealed = $("revealedAnswer");
+
+    revealed.replaceChildren();
+
+    if (!guess) {
+      feedback.className = "feedback bad";
+      feedback.textContent = "Type your answer first. You've got this! 💛";
+      $("quizInput").focus();
+      return;
+    }
+
+    attemptedAnswers++;
+    recordStudyDay();
+
+    if (isCorrect(guess, card.answer)) {
+      correctAnswers++;
+      card.mastered = true;
+
+      feedback.className = "feedback good";
+      feedback.textContent = "That's correct! You're blooming brilliantly! 🌸🎉";
+
+      celebrate();
+      showToast("Correct answer! Keep shining ✨");
+    } else {
+      feedback.className = "feedback bad";
+      feedback.textContent = "Not quite — that's how learning works. Keep going! 💛";
+
+      const answerBox = document.createElement("div");
+      answerBox.className = "answer-reveal";
+
+      const label = document.createElement("strong");
+      label.textContent = "Correct answer: ";
+
+      answerBox.append(label, document.createTextNode(card.answer));
+      revealed.appendChild(answerBox);
+    }
+
+    saveData();
+    render();
+
+    // render() updates the deck but leaves the quiz feedback intact.
+  }
+
+  function showToast(message) {
+    const toast = $("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2600);
+  }
+
+  function openModal(card = null) {
+    previousFocus = document.activeElement;
+    editingId = card ? card.id : null;
+
+    $("modalTitle").textContent = card
+      ? "Edit your flashcard ✏️"
+      : "Create a flashcard 🌱";
+
+    $("saveBtn").textContent = card ? "Save changes 💚" : "Save card 🌿";
+    $("questionInput").value = card ? card.question : "";
+    $("answerInput").value = card ? card.answer : "";
+
+    $("modalBackdrop").classList.add("open");
+    $("questionInput").focus();
+  }
+
+  function closeModal() {
+    $("modalBackdrop").classList.remove("open");
+    $("cardForm").reset();
+
+    if (previousFocus && typeof previousFocus.focus === "function") {
+      previousFocus.focus();
+    }
+  }
+
+  function saveCard(event) {
+    event.preventDefault();
+
+    const question = $("questionInput").value.trim();
+    const answer = $("answerInput").value.trim();
+
+    if (!question || !answer) {
+      showToast("Please fill in both fields. 🌱");
+      return;
+    }
+
+    if (editingId) {
+      const index = cards.findIndex(c => c.id === editingId);
+
+      if (index !== -1) {
+        cards[index].question = question;
+        cards[index].answer = answer;
+        currentIndex = index;
+        showToast("Your flashcard has been updated! 💚");
+      }
+    } else {
+      cards.push({
+        id: makeId(),
+        question,
+        answer,
+        mastered: false
+      });
+
+      currentIndex = cards.length - 1;
+      showToast("A new little idea has been planted! 🌱");
+    }
+
+    closeModal();
+    resetCardState();
+    saveData();
+    render();
+  }
+
+  function deleteCard(id) {
+    const index = cards.findIndex(c => c.id === id);
+    if (index === -1) return;
+
+    const confirmed = window.confirm(
+      "Delete this flashcard? This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    cards.splice(index, 1);
+
+    if (!cards.length) {
+      currentIndex = 0;
+    } else if (index < currentIndex) {
+      currentIndex--;
+    } else if (currentIndex >= cards.length) {
+      currentIndex = cards.length - 1;
+    }
+
+    resetCardState();
+    saveData();
+    render();
+    showToast("Flashcard deleted. 🌿");
+  }
+
+  $("addBtn").addEventListener("click", () => openModal());
+
+$("shuffleBtn").addEventListener("click", shuffleCards);
+
+$("hardModeBtn").addEventListener("click", toggleHardMode);
+  $("restartBtn").addEventListener("click", restartQuiz);
+
+  $("editBtn").addEventListener("click", () => {
+    const card = currentCard();
+    if (card) openModal(card);
+  });
+
+  $("deleteCurrentBtn").addEventListener("click", () => {
+    const card = currentCard();
+    if (card) deleteCard(card.id);
+  });
+
+  $("showAnswerBtn").addEventListener("click", toggleAnswer);
+  $("flashcard").addEventListener("click", toggleAnswer);
+
+  $("flashcard").addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleAnswer();
+    }
+  });
+
+  $("prevBtn").addEventListener("click", () => goTo(currentIndex - 1));
+  $("nextBtn").addEventListener("click", () => goTo(currentIndex + 1));
+
+  $("quizForm").addEventListener("submit", checkAnswer);
+  $("cardForm").addEventListener("submit", saveCard);
+
+  $("closeModalBtn").addEventListener("click", closeModal);
+  $("cancelBtn").addEventListener("click", closeModal);
+
+  $("modalBackdrop").addEventListener("click", event => {
+    if (event.target === $("modalBackdrop")) closeModal();
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && $("modalBackdrop").classList.contains("open")) {
+      closeModal();
+    }
+  });
+
+  $("searchInput").addEventListener("input", renderDeckList);
+
+  $("soundToggle").addEventListener("click", () => {
+    soundOn = !soundOn;
+    $("soundToggle").textContent = soundOn ? "🔊 Sound on" : "🔇 Sound off";
+
+    if (soundOn) {
+      playSuccessSound();
+      showToast("Sound is on! 🎵");
+    } else {
+      showToast("Sound is off. Enjoy the quiet! 🌿");
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
